@@ -1,0 +1,6 @@
+[
+  {"name": "Policy Violation File Display", "description": "Files showing as \"policy violation file is removed\" on the source may still be migrated if the Google Chat API exposes them as valid attachments. Migration relies on source API responses; UI-level policy enforcement may differ.", "family": "Files", "screenshot": ""},
+  {"name": "Custom Emoji as Empty Message", "description": "Custom emojis from Google Chat will not appear in Teams. Messages containing custom emojis may appear blank or show garbled characters. Google Chat uses special codes; Teams supports only standard Unicode emojis or uploaded images.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "Link as Normal Text", "description": "Links are migrated as plain text to the destination due to Microsoft Teams API limitations. Rich link formatting is not supported via migration APIs.", "family": "Formatting", "screenshot": ""},
+  {"name": "GIF as Link", "description": "GIFs are successfully migrated to the destination; the appearance may differ due to Teams native rendering behaviour. Content integrity is maintained.", "family": "Files", "screenshot": ""}
+]

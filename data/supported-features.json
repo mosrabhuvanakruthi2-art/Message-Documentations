@@ -1,0 +1,254 @@
+[
+  {
+    "name": "One Time Migration",
+    "description": "Initial transfer of all selected Slack data including channels, direct messages, files, and metadata from the source Slack workspace to the destination Google Chat space. Preserves message history, user attribution, and supported formatting.",
+    "family": "Migration",
+    "screenshot": ""
+  },
+  {
+    "name": "Delta Migration",
+    "description": "Incremental transfer of new or updated data from Slack to Microsoft Teams after the One-Time Migration. Captures the latest messages, files, and supported updates, ensuring the destination remains up to date.",
+    "family": "Migration",
+    "screenshot": ""
+  },
+  {
+    "name": "Public Channels",
+    "description": "Migrates all public channels with message history, files, reactions, and metadata. All public channels are migrated as Private channels.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Non-Admin Public Channels",
+    "description": "Public channels where the admin is not a member are also migrated, ensuring complete workspace coverage. All public channels are migrated as Private channels.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Private Channels",
+    "description": "Private channels are migrated while preserving access restrictions and message confidentiality.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Non-Admin Private Channels",
+    "description": "Private channels where the admin does not have access are migrated.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Channel Members",
+    "description": "Ensures all channel members are correctly mapped and added in the destination space with preserved permissions.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Channel Mentions",
+    "description": "All channel references (e.g., #channel-name) are migrated as clickable links.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Tagged Channel Mentions",
+    "description": "Tagged channel mentions will migrate as text.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "User Mentions",
+    "description": "User mentions (@username) are migrated, except for unmapped users.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Members Posted Username",
+    "description": "Displays the original message author to maintain attribution. Active unmapped users: messages under Admin with \"via user\" label. Inactive unmapped: messages moved to Conflict. External unmapped: under Admin with \"via external user\" label. Deactivated users: migrated by Admin name.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Channel Description",
+    "description": "Channel descriptions are migrated and visible in the destination cloud.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Archived Channels",
+    "description": "Archived channels are migrated with full message history; only the channel creator is added initially.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Replies in Channels",
+    "description": "Threaded replies are preserved as replies or migrated as individual messages based on destination limitations.",
+    "family": "Channels",
+    "screenshot": ""
+  },
+  {
+    "name": "Group DMs",
+    "description": "Migrates multi-user direct message conversations securely.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "Non-Admin Group DMs",
+    "description": "Group DMs without admin participation are supported.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "One-on-One DMs",
+    "description": "All one-to-one conversations are migrated with timestamps and message attribution.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "Non-Admin One-on-One DMs",
+    "description": "One-on-one DMs where admin is not involved are included.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "Members Posted Username (DMs)",
+    "description": "Preserves original sender information for each DM.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "DM Members",
+    "description": "All DM participants are correctly mapped and added.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "User Mentions in DMs",
+    "description": "User mentions inside DMs are retained where mapping exists.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "Replies in Direct Messages",
+    "description": "Replies in DMs are migrated as individual messages due to platform constraints.",
+    "family": "Direct Messages",
+    "screenshot": ""
+  },
+  {
+    "name": "Ordered List",
+    "description": "List formatting is maintained during migration.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Bullet List",
+    "description": "Bullet list formatting is maintained during migration.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Bold",
+    "description": "Bold text formatting is maintained.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Italic",
+    "description": "Italic text formatting is maintained.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Strike Through",
+    "description": "Strikethrough formatting is maintained.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Code Block",
+    "description": "Code block formatting is maintained.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Snippet",
+    "description": "Snippets are migrated as document format.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Audio Message",
+    "description": "Audio messages are supported in migration.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Video Message",
+    "description": "Video messages are supported in migration.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Emojis",
+    "description": "Emojis are preserved during migration.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Reactions",
+    "description": "Reactions are preserved during migration.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Forwarded Message",
+    "description": "Forwarded messages are supported for channels.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Link of a Message",
+    "description": "Message links are migrated as clickable URLs.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "Links",
+    "description": "Hyperlinks and shared file links are supported.",
+    "family": "Text Formatting",
+    "screenshot": ""
+  },
+  {
+    "name": "All Types of Files",
+    "description": "All supported file types are migrated with size limitations.",
+    "family": "Files",
+    "screenshot": ""
+  },
+  {
+    "name": "Canva Files",
+    "description": "Canva files are migrated as .html file.",
+    "family": "Files",
+    "screenshot": ""
+  },
+  {
+    "name": "List Files",
+    "description": "Files shared within lists or messages are migrated.",
+    "family": "Files",
+    "screenshot": ""
+  },
+  {
+    "name": "Files Posted from Drive / SharePoint",
+    "description": "Migrated as links when direct upload is not supported.",
+    "family": "Files",
+    "screenshot": ""
+  },
+  {
+    "name": "GIFs",
+    "description": "Animated GIFs are preserved. Migrated as links.",
+    "family": "Files",
+    "screenshot": ""
+  },
+  {
+    "name": "Stickers",
+    "description": "Stickers are migrated where supported. Migrated as links.",
+    "family": "Files",
+    "screenshot": ""
+  }
+]

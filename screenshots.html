@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screenshots – Migration Docs</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .screenshots-page { padding: 24px 32px 48px; max-width: 1200px; margin: 0 auto; }
+    .screenshots-page h1 { margin: 0 0 8px; font-size: 1.5rem; }
+    .screenshots-page .back-link { display: inline-block; margin-bottom: 24px; color: var(--name-link); text-decoration: none; font-size: 0.9rem; }
+    .screenshots-page .back-link:hover { text-decoration: underline; }
+    .screenshots-section { margin-bottom: 32px; }
+    .screenshots-section h2 { margin: 0 0 16px; font-size: 1.2rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .screenshot-block { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--border); scroll-margin-top: 80px; scroll-margin-bottom: 24px; }
+    .screenshot-block:last-child { border-bottom: none; }
+    .screenshot-block h3 { margin: 0 0 8px; font-size: 1rem; color: var(--text-primary); }
+    .screenshot-block .screenshot-img-wrap { margin-top: 12px; }
+    .screenshot-block .screenshot-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px; margin-bottom: 4px; }
+    .screenshot-block .screenshots-row { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 12px; }
+    .screenshot-block .screenshot-item { flex: 1; min-width: 200px; max-width: 100%; }
+    .screenshot-block .screenshot-item img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); display: block; }
+    .screenshot-block img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+    .screenshot-block .no-image { color: var(--text-secondary); font-size: 0.875rem; font-style: italic; margin-top: 8px; }
+    .screenshot-block .image-not-found { display: block; margin-top: 8px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px dashed var(--border); border-radius: 6px; font-size: 0.8rem; color: var(--text-secondary); }
+    .screenshots-page .single-feature-back { margin-bottom: 20px; font-size: 0.9rem; }
+    .screenshots-page .single-feature-back a { color: var(--name-link); text-decoration: none; }
+    .screenshots-page .single-feature-back a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="logo" style="text-decoration:none;color:inherit;">Migration Docs</a>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="search-trigger" style="text-decoration:none;color:inherit;">← Back to docs</a>
+    </div>
+  </header>
+
+  <main class="screenshots-page">
+    <a href="index.html" class="back-link">← Back to Supported Features & Limitations</a>
+    <h1 id="screenshots-title">Screenshots</h1>
+    <p id="screenshots-subtitle" style="color: var(--text-secondary); margin: 0 0 24px; font-size: 0.9rem;"></p>
+    <div id="screenshots-content"></div>
+  </main>
+
+  <script>
+(function () {
+  'use strict';
+
+  var COMBO_LABELS = {
+    'slack-to-slack': 'Slack to Slack',
+    'slack-to-chat': 'Slack to Chat',
+    'slack-to-teams': 'Slack to Teams',
+    'teams-to-teams': 'Teams to Teams',
+    'teams-to-chat': 'Teams to Chat',
+    'chat-to-chat': 'Chat to Chat',
+    'chat-to-teams': 'Chat to Teams'
+  };
+
+  function toSlug(name) {
+    if (!name || typeof name !== 'string') return '';
+    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function getParams() {
+    var params = {};
+    var q = window.location.search.slice(1).split('&');
+    for (var i = 0; i < q.length; i++) {
+      var parts = q[i].split('=');
+      if (parts.length >= 2) params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1].replace(/\+/g, ' '));
+    }
+    return params;
+  }
+
+  function imagePath(combo, slug, ext, basePath) {
+    var base = (basePath && basePath.trim()) ? basePath.replace(/\/$/, '') : 'assets/screenshots';
+    return base + '/' + combo + '/' + slug + '.' + (ext || 'png');
+  }
+
+  function loadJSON(path) {
+    return fetch(path).then(function (res) { return res.ok ? res.json() : []; });
+  }
+
+  function getScreenshotMeta(metadata, combo, section, slug) {
+    if (!metadata || !metadata[combo]) return null;
+    var sec = metadata[combo][section];
+    return sec && sec[slug] && Array.isArray(sec[slug].images) && sec[slug].images.length > 0 ? sec[slug].images : null;
+  }
+
+  function renderBlock(combo, item, section, metadata) {
+    var slug = toSlug(item.name);
+    var id = section + '-' + slug;
+    var images = getScreenshotMeta(metadata, combo, section, slug);
+    var html = '<div class="screenshot-block" id="' + escapeAttr(id) + '">';
+    html += '<h3>' + escapeHtml(item.name) + '</h3>';
+    if (item.description) html += '<p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">' + escapeHtml(item.description) + '</p>';
+    html += '<p class="screenshot-label">Screenshot:</p>';
+    html += '<div class="screenshot-img-wrap">';
+    if (images && images.length > 0) {
+      html += '<div class="screenshots-row">';
+      for (var i = 0; i < images.length; i++) {
+        var img = images[i];
+        var path = (img.path || '').trim();
+        var label = (img.label || '').trim();
+        html += '<div class="screenshot-item">';
+        html += '<img src="' + escapeAttr(path) + '" alt="' + escapeAttr(label || item.name + ' screenshot ' + (i + 1)) + '" loading="lazy" onerror="this.style.display=\'none\'; if(this.nextElementSibling) this.nextElementSibling.style.display=\'block\';">';
+        html += '<span class="no-image image-not-found" style="display:none;">Image not found: <code>' + escapeHtml(path) + '</code></span>';
+        if (label) html += '<p class="screenshot-label" style="margin-top:4px;">' + escapeHtml(label) + '</p>';
+        html += '</div>';
+      }
+      html += '</div>';
+    } else {
+      html += '<p class="no-image">No screenshot added yet. Add an entry for this heading in <code>data/screenshot-metadata.json</code> with the correct image path (only matched screenshots are shown).</p>';
+    }
+    html += '</div></div>';
+    return html;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  var PLACEHOLDER_SVG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240"><rect fill="#2a2d31" width="400" height="240"/><text x="200" y="125" fill="#888" font-size="14" text-anchor="middle">No image yet</text></svg>');
+  window.PLACEHOLDER_SVG = PLACEHOLDER_SVG;
+  function tryJpg(img) {
+    if (img.dataset.triedJpg) {
+      img.onerror = null;
+      img.src = PLACEHOLDER_SVG;
+      img.style.display = 'block';
+      if (img.nextElementSibling) { img.nextElementSibling.classList.add('image-not-found'); img.nextElementSibling.style.display = 'block'; }
+      return;
+    }
+    img.dataset.triedJpg = '1';
+    img.src = imagePath(img.dataset.combo, img.dataset.slug, 'jpg', img.dataset.basePath || '');
+    img.onerror = function () { img.onerror = null; img.src = PLACEHOLDER_SVG; img.style.display = 'block'; if (img.nextElementSibling) { img.nextElementSibling.classList.add('image-not-found'); img.nextElementSibling.style.display = 'block'; } };
+  }
+  window.tryJpg = tryJpg;
+
+  function escapeAttr(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function findItemBySlug(features, limitations, normalizedSlug) {
+    var i, j;
+    for (i = 0; i < features.length; i++) {
+      if (toSlug(features[i].name) === normalizedSlug) return { item: features[i], section: 'features' };
+      if (Array.isArray(features[i].children)) {
+        for (j = 0; j < features[i].children.length; j++) {
+          if (toSlug(features[i].children[j].name) === normalizedSlug) return { item: features[i].children[j], section: 'features' };
+        }
+      }
+    }
+    for (i = 0; i < limitations.length; i++) {
+      if (toSlug(limitations[i].name) === normalizedSlug) return { item: limitations[i], section: 'limitations' };
+      if (Array.isArray(limitations[i].children)) {
+        for (j = 0; j < limitations[i].children.length; j++) {
+          if (toSlug(limitations[i].children[j].name) === normalizedSlug) return { item: limitations[i].children[j], section: 'limitations' };
+        }
+      }
+    }
+    return null;
+  }
+
+  function run() {
+    var params = getParams();
+    var combo = params.combo || 'slack-to-chat';
+    var featureSlug = (params.feature || '').trim();
+    var sectionFilter = params.section || '';
+    var normalizedSlug = featureSlug ? String(featureSlug).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '') : '';
+
+    document.getElementById('screenshots-title').textContent = 'Screenshots – ' + (COMBO_LABELS[combo] || combo);
+    document.getElementById('screenshots-subtitle').innerHTML = 'Only screenshots explicitly mapped to a heading in <code>data/screenshot-metadata.json</code> are shown. Add an entry (key = feature slug) only when the image matches that heading; otherwise the slot is left empty.';
+
+    Promise.all([
+      loadJSON('data/screenshot-metadata.json').catch(function () { return {}; }),
+      loadJSON('data/' + combo + '/supported-features.json'),
+      loadJSON('data/' + combo + '/limitations.json')
+    ]).then(function (results) {
+      var metadata = results[0] && typeof results[0] === 'object' ? results[0] : {};
+      var features = Array.isArray(results[1]) ? results[1] : [];
+      var limitations = Array.isArray(results[2]) ? results[2] : [];
+      var html = '';
+
+      if (normalizedSlug) {
+        var found = findItemBySlug(features, limitations, normalizedSlug);
+        if (found) {
+          var allUrl = 'screenshots.html?combo=' + encodeURIComponent(combo);
+          if (sectionFilter) allUrl += '&section=' + encodeURIComponent(sectionFilter);
+          html += '<div class="screenshots-section">';
+          html += '<h2>' + (found.section === 'features' ? 'Supported Features' : 'Limitations') + '</h2>';
+          html += '<p class="single-feature-back"><a href="' + escapeAttr(allUrl) + '">View all features and limitations</a></p>';
+          html += renderBlock(combo, found.item, found.section, metadata);
+          html += '</div>';
+          document.getElementById('screenshots-content').innerHTML = html;
+          return;
+        }
+      }
+
+      if (features.length && (!sectionFilter || sectionFilter === 'features')) {
+        html += '<div class="screenshots-section"><h2>Supported Features</h2>';
+        features.forEach(function (item) {
+          html += renderBlock(combo, item, 'features', metadata);
+          if (Array.isArray(item.children) && item.children.length > 0) {
+            item.children.forEach(function (child) {
+              html += renderBlock(combo, child, 'features', metadata);
+            });
+          }
+        });
+        html += '</div>';
+      }
+      if (limitations.length && (!sectionFilter || sectionFilter === 'limitations')) {
+        html += '<div class="screenshots-section"><h2>Limitations</h2>';
+        limitations.forEach(function (item) {
+          html += renderBlock(combo, item, 'limitations', metadata);
+          if (Array.isArray(item.children) && item.children.length > 0) {
+            item.children.forEach(function (child) {
+              html += renderBlock(combo, child, 'limitations', metadata);
+            });
+          }
+        });
+        html += '</div>';
+      }
+      if (!html) html = '<p style="color: var(--text-secondary);">No features or limitations found for this migration path.</p>';
+      document.getElementById('screenshots-content').innerHTML = html;
+
+      if (normalizedSlug) {
+        var el = document.getElementById((sectionFilter || 'features') + '-' + normalizedSlug) || document.getElementById('features-' + normalizedSlug) || document.getElementById('limitations-' + normalizedSlug);
+        if (!el) {
+          var blocks = document.querySelectorAll('.screenshot-block');
+          for (var i = 0; i < blocks.length; i++) {
+            var h3 = blocks[i].querySelector('h3');
+            if (h3 && toSlug(h3.textContent) === normalizedSlug) { el = blocks[i]; break; }
+          }
+        }
+        if (el) {
+          function scrollToBlock() { el.scrollIntoView({ behavior: 'auto', block: 'center' }); }
+          setTimeout(scrollToBlock, 150);
+          setTimeout(scrollToBlock, 600);
+        }
+      }
+    }).catch(function () {
+      document.getElementById('screenshots-content').innerHTML = '<p style="color: var(--text-secondary);">Failed to load data. Check the migration path.</p>';
+    });
+  }
+
+  run();
+})();
+  </script>
+</body>
+</html>

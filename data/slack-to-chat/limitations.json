@@ -1,0 +1,20 @@
+[
+  {"name": "Custom Emojis", "description": "Custom emojis migrate only as their emoji names. Slack does not provide a unique identifier/code for custom emojis via API, so we are unable to fully recreate them in Google Chat.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "Stickers", "description": "Stickers are currently migrating as links. Improvement is planned and currently in the backlog.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "GIFs", "description": "GIFs are currently migrating as links. Enhancement is in the backlog.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "Canva Files", "description": "Canva files are migrating as .html files. Google Chat does not natively support Canva file format in this context, so we convert them to HTML during migration.", "family": "Files", "screenshot": ""},
+  {"name": "Multiple Files in Message", "description": "Google Chat does not support multiple files in a single message. The first file is migrated as a file and the remaining files are migrated as links.", "family": "Files", "screenshot": ""},
+  {"name": "Video Transcriptions", "description": "Video transcriptions are not migrating. Video transcriptions are not available on Google Chat side via API.", "family": "Transcriptions", "screenshot": ""},
+  {"name": "Audio Transcriptions", "description": "Audio transcriptions are not migrating. Audio transcriptions are not available on the Google Chat side via API.", "family": "Transcriptions", "screenshot": ""},
+  {"name": "Underlined Text", "description": "Underlined text is migrating as normal text. Fix is in the backlog.", "family": "Formatting", "screenshot": ""},
+  {"name": "Custom Reactions", "description": "Custom reactions are not migrating. Feature is currently in the backlog.", "family": "Reactions", "screenshot": ""},
+  {"name": "Saved Messages", "description": "Saved messages are migrating as normal messages (no saved state retained). We are not getting any info about who saved that message, so we cannot post this as a saved message to destination.", "family": "Reactions", "screenshot": ""},
+  {"name": "Pinned Messages", "description": "Pinned messages are migrating as normal messages (pin status not retained). Google Chat does not support migrating as pinned message through API. Feature is currently in the backlog.", "family": "Reactions", "screenshot": ""},
+  {"name": "User Groups", "description": "User groups are migrating as Group IDs only. Slack API provides only group ID, not complete group metadata, so equivalent groups are not automatically created in Google Chat.", "family": "User Groups", "screenshot": ""},
+  {"name": "Tagged Channels", "description": "If a message tags the same channel being migrated, the tag will migrate correctly. If a message tags another channel, it migrates as normal text when the referenced channel is not available in the destination environment.", "family": "Channels", "screenshot": ""},
+  {"name": "Polly", "description": "Polly content is migrating as plain text only. Enhancement is in the backlog.", "family": "Integrations", "screenshot": ""},
+  {"name": "Workflows", "description": "Slack workflows are not currently supported in migration. Feature is in the backlog.", "family": "Integrations", "screenshot": ""},
+  {"name": "Edited Message Tag", "description": "Google Chat automatically generates the 'Edited' label only when edited inside Chat. During migration, the edited status cannot be preserved; message appears in latest version without Edited tag.", "family": "Message State", "screenshot": ""},
+  {"name": "Forwarded Message", "description": "Forwarded messages are treated as normal messages. Source data structure does not allow identifying forwarded metadata. Feature is in the backlog.", "family": "Message State", "screenshot": ""},
+  {"name": "Self Messages", "description": "Google Chat does not support self-messaging functionality, so self-messages cannot be migrated.", "family": "Message State", "screenshot": ""}
+]

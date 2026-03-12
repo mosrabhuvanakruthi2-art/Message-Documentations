@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload PDF – Migration Docs</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .upload-page { padding: 24px 32px 48px; max-width: 720px; margin: 0 auto; }
+    .upload-page h1 { margin: 0 0 8px; font-size: 1.5rem; }
+    .upload-page .back-link { display: inline-block; margin-bottom: 24px; color: var(--name-link); text-decoration: none; font-size: 0.9rem; }
+    .upload-page .back-link:hover { text-decoration: underline; }
+    .upload-page .intro { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; }
+    .upload-form { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; max-width: 520px; }
+    .upload-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .upload-row:last-of-type { margin-bottom: 0; }
+    .upload-row label { min-width: 100px; font-size: 0.9rem; color: var(--text-secondary); }
+    .upload-dropdown { flex: 1; padding: 8px 32px 8px 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23b0b0b0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+    .upload-dropdown option { background: var(--bg-secondary); color: var(--text-primary); }
+    .upload-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .upload-actions input[type="file"] { font-size: 0.85rem; max-width: 220px; }
+    .btn-upload { padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    .btn-upload:hover { background: var(--accent-hover); }
+    .btn-upload:disabled { opacity: 0.6; cursor: not-allowed; }
+    .upload-status { font-size: 0.85rem; color: var(--text-secondary); margin-top: 12px; }
+    .upload-status.success { color: var(--name-link); }
+    .upload-status.error { color: #e74c3c; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="logo" style="text-decoration:none;color:inherit;font-size:1.25rem;font-weight:600;">Migration Docs</a>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="search-trigger" style="text-decoration:none;color:inherit;">← Back to docs</a>
+    </div>
+  </header>
+
+  <main class="upload-page" style="margin-top: 56px;">
+    <a href="index.html" class="back-link">← Back to Supported Features & Limitations</a>
+    <h1>Upload PDF by migration path</h1>
+    <p class="intro">Choose the combination and document type, then upload a PDF. To upload a single screenshot for one feature, use <a href="upload-image.html" style="color: var(--name-link);">Upload screenshot</a>. Pages are extracted as images and mapped to the selected section in order. Use this when the document is updated with new features or changes.<br><strong>Run the server with upload support:</strong> <code>node scripts/server.js</code> (then open this page at localhost:3000/upload.html).</p>
+
+    <div class="upload-form">
+      <div class="upload-row">
+        <label for="combo-select">Combination</label>
+        <select id="combo-select" class="upload-dropdown" aria-label="Choose migration combination">
+          <option value="slack-to-chat">Slack to Chat</option>
+          <option value="slack-to-slack">Slack to Slack</option>
+          <option value="slack-to-teams">Slack to Teams</option>
+          <option value="teams-to-teams">Teams to Teams</option>
+          <option value="teams-to-chat">Teams to Chat</option>
+          <option value="chat-to-chat">Chat to Chat</option>
+          <option value="chat-to-teams">Chat to Teams</option>
+        </select>
+      </div>
+      <div class="upload-row">
+        <label for="section-select">Document</label>
+        <select id="section-select" class="upload-dropdown" aria-label="Choose Supported features or Limitations">
+          <option value="features">Supported features</option>
+          <option value="limitations">Limitations</option>
+        </select>
+      </div>
+      <div class="upload-row">
+        <label>PDF file</label>
+        <div class="upload-actions">
+          <input type="file" id="pdf-input" accept=".pdf" aria-label="Choose PDF file">
+          <button type="button" class="btn-upload" id="btn-upload">Upload PDF</button>
+        </div>
+      </div>
+      <p class="upload-status" id="upload-status" aria-live="polite"></p>
+    </div>
+  </main>
+
+  <script>
+(function () {
+  'use strict';
+
+  var comboSelect = document.getElementById('combo-select');
+  var sectionSelect = document.getElementById('section-select');
+  var pdfInput = document.getElementById('pdf-input');
+  var btnUpload = document.getElementById('btn-upload');
+  var statusEl = document.getElementById('upload-status');
+
+  function setStatus(text, type) {
+    statusEl.textContent = text;
+    statusEl.className = 'upload-status' + (type ? ' ' + type : '');
+  }
+
+  btnUpload.addEventListener('click', function () {
+    if (!pdfInput.files || !pdfInput.files.length) {
+      setStatus('Choose a PDF first', 'error');
+      return;
+    }
+    var file = pdfInput.files[0];
+    if (!file.type || file.type.indexOf('pdf') === -1) {
+      setStatus('File must be a PDF', 'error');
+      return;
+    }
+
+    var combo = comboSelect.value;
+    var section = sectionSelect.value;
+    setStatus('Uploading…', '');
+    btnUpload.disabled = true;
+
+    var form = new FormData();
+    form.append('combo', combo);
+    form.append('section', section);
+    form.append('pdf', file);
+
+    fetch('/api/upload-pdf', {
+      method: 'POST',
+      body: form
+    })
+      .then(function (res) {
+        if (!res.ok) return res.json().then(function (j) { throw new Error(j.error || res.statusText); });
+        return res.json();
+      })
+      .then(function (data) {
+        setStatus((data.pages ? data.pages + ' pages extracted' : 'Done'), 'success');
+        pdfInput.value = '';
+      })
+      .catch(function (err) {
+        setStatus(err.message || 'Upload failed', 'error');
+      })
+      .finally(function () {
+        btnUpload.disabled = false;
+      });
+  });
+})();
+  </script>
+</body>
+</html>

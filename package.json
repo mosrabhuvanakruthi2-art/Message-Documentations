@@ -1,0 +1,13 @@
+{
+  "name": "migration-docs",
+  "private": true,
+  "scripts": {
+    "extract-pdf-screenshots": "node scripts/extract-pdf-screenshots.js",
+    "start": "node scripts/server.js",
+    "serve": "node scripts/serve.js"
+  },
+  "dependencies": {
+    "formidable": "^3.5.2",
+    "pdf-to-img": "^5.0.0"
+  }
+}

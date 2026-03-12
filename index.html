@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration Docs – Supported Features & Limitations</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <h1 class="logo">Migration Docs</h1>
+    </div>
+    <nav class="header-nav">
+      <a href="#" class="nav-link active" data-section="features">Supported Features</a>
+      <a href="#" class="nav-link" data-section="limitations">Limitations</a>
+    </nav>
+    <div class="header-right">
+      <a href="upload.html" class="nav-link" style="margin-right:8px;">Upload PDF</a>
+      <a href="upload-image.html" class="nav-link" style="margin-right:8px;">Upload screenshot</a>
+      <button type="button" class="search-trigger" aria-label="Search the docs (Ctrl+K)">
+        <span class="search-placeholder">Search the docs!</span>
+        <kbd>Ctrl+K</kbd>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Reference</h2>
+        <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Collapse sidebar">
+          <span class="chevron"></span>
+        </button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarCombos" aria-label="Migration combinations">
+        <div class="sidebar-section combos-section">
+          <h3 class="sidebar-combos-title">Migration path</h3>
+          <ul class="sidebar-combos-list" id="sidebarCombosList">
+            <li><a href="#" class="sidebar-link combo-link active" data-combo="slack-to-chat">Slack to Chat</a></li>
+            <li><a href="#" class="sidebar-link combo-link" data-combo="slack-to-slack">Slack to Slack</a></li>
+            <li><a href="#" class="sidebar-link combo-link" data-combo="slack-to-teams">Slack to Teams</a></li>
+            <li><a href="#" class="sidebar-link combo-link" data-combo="teams-to-teams">Teams to Teams</a></li>
+            <li><a href="#" class="sidebar-link combo-link" data-combo="teams-to-chat">Teams to Chat</a></li>
+            <li><a href="#" class="sidebar-link combo-link" data-combo="chat-to-chat">Chat to Chat</a></li>
+            <li><a href="#" class="sidebar-link combo-link" data-combo="chat-to-teams">Chat to Teams</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main" id="main">
+      <section class="content-panel active" id="panel-features" aria-labelledby="title-features">
+        <h2 class="content-title" id="title-features">Supported Features</h2>
+        <div class="search-bar">
+          <input type="search" id="searchInput" class="search-input" placeholder="Search by name or description!" aria-label="Search by name or description">
+        </div>
+        <div class="filter-bar">
+          <button type="button" class="filter-tag active" data-family="">All</button>
+          <div class="filter-tags" id="filterTagsFeatures"></div>
+          <button type="button" class="filter-clear hidden" id="clearFiltersFeatures">Clear filters</button>
+        </div>
+        <div class="table-wrap">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Screenshots</th>
+                <th>Family</th>
+              </tr>
+            </thead>
+            <tbody id="tableBodyFeatures"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="content-panel" id="panel-limitations" aria-labelledby="title-limitations" hidden>
+        <h2 class="content-title" id="title-limitations">Limitations</h2>
+        <div class="search-bar">
+          <input type="search" id="searchInputLimitations" class="search-input" placeholder="Search by name or description!" aria-label="Search by name or description">
+        </div>
+        <div class="filter-bar">
+          <button type="button" class="filter-tag active" data-family="">All</button>
+          <div class="filter-tags" id="filterTagsLimitations"></div>
+          <button type="button" class="filter-clear hidden" id="clearFiltersLimitations">Clear filters</button>
+        </div>
+        <div class="table-wrap">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Screenshots</th>
+                <th>Family</th>
+              </tr>
+            </thead>
+            <tbody id="tableBodyLimitations"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

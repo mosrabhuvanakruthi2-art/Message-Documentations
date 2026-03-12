@@ -1,0 +1,9 @@
+[
+  {"name": "Reactions", "description": "Reactions applied to messages in the source chat are not migrated to the destination. Message content is migrated successfully but reaction elements are not carried over.", "family": "Reactions", "screenshot": ""},
+  {"name": "Underline and Colours", "description": "Underline and colour formatting are not migrated. Google Chat APIs provide basic formatting only, not full rich-text styling.", "family": "Formatting", "screenshot": ""},
+  {"name": "Custom Emoji as ?", "description": "Custom emojis will not migrate; messages containing them will appear as \"?\" in the destination because the Google Chat API does not expose custom emoji images.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "Mention as Bold Type Text", "description": "If bold or italic formatting is applied to a mention, the destination may show mentions with different formatting due to API preserving exact formatting markers and Chat UI rendering limitations.", "family": "Formatting", "screenshot": ""},
+  {"name": "Mention in Code Block", "description": "Mentions inside a code block are migrated as normal text only; we are not able to preserve mention in code block.", "family": "Formatting", "screenshot": ""},
+  {"name": "Code Block as Link", "description": "From API we do not get format of the message, so the message is migrated as normal message; if the code block contains a link, the link is migrated as expected.", "family": "Formatting", "screenshot": ""},
+  {"name": "Completed Task Notification", "description": "The \"task completed\" notification may appear in destination but not be visible in source UI until the task is opened. This is a valid system message migrated from API.", "family": "Message State", "screenshot": ""}
+]

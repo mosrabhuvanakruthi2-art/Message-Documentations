@@ -1,0 +1,348 @@
+{
+  "_basePath": "assets/screenshots",
+  "_comment": "Add screenshots via Upload screenshot (upload-image.html) or by placing images in assets/screenshots/<combo>/ with the correct filename. Only entries listed here are shown.",
+  "slack-to-chat": {
+    "features": {
+      "public-channels": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/public-channels.png"
+          }
+        ]
+      },
+      "non-admin-public-channels": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/non-admin-public-channels.png"
+          }
+        ]
+      },
+      "private-channels": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/private-channels.png"
+          }
+        ]
+      },
+      "non-admin-private-channels": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/non-admin-private-channels.png"
+          }
+        ]
+      },
+      "channel-members": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/channel-members.png"
+          }
+        ]
+      },
+      "channel-mentions": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/channel-mentions.png"
+          }
+        ]
+      },
+      "tagged-channel-mentions": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/tagged-channel-mentions.png"
+          }
+        ]
+      },
+      "user-mentions": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/user-mentions.png"
+          }
+        ]
+      },
+      "members-posted-username": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/members-posted-username.png"
+          }
+        ]
+      },
+      "channel-description": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/channel-description.png"
+          }
+        ]
+      },
+      "archived-channels": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/archived-channels.png"
+          }
+        ]
+      },
+      "replies-in-channels": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/replies-in-channels.png"
+          }
+        ]
+      },
+      "group-dms": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/group-dms.png"
+          }
+        ]
+      },
+      "non-admin-group-dms": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/non-admin-group-dms.png"
+          }
+        ]
+      },
+      "one-on-one-dms": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/one-on-one-dms.png"
+          }
+        ]
+      },
+      "non-admin-one-on-one-dms": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/non-admin-one-on-one-dms.png"
+          }
+        ]
+      },
+      "members-posted-username-dms": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/members-posted-username-dms.png"
+          }
+        ]
+      },
+      "dm-members": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/dm-members.png"
+          }
+        ]
+      },
+      "user-mentions-in-dms": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/user-mentions-in-dms.png"
+          }
+        ]
+      },
+      "replies-in-direct-messages": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/replies-in-direct-messages.png"
+          }
+        ]
+      },
+      "ordered-list": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/ordered-list.png"
+          }
+        ]
+      },
+      "bullet-list": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/bullet-list.png"
+          }
+        ]
+      },
+      "bold": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/bold.png"
+          }
+        ]
+      },
+      "italic": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/italic.png"
+          }
+        ]
+      },
+      "strike-through": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/strike-through.png"
+          }
+        ]
+      },
+      "code-block": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/code-block.png"
+          }
+        ]
+      },
+      "audio-message": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/audio-message.png"
+          }
+        ]
+      },
+      "video-message": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/video-message.png"
+          }
+        ]
+      },
+      "emojis": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/emojis.png"
+          }
+        ]
+      },
+      "reactions": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/reactions.png"
+          }
+        ]
+      },
+      "forwarded-message": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/forwarded-message.png"
+          }
+        ]
+      },
+      "link-of-a-message": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/link-of-a-message.png"
+          }
+        ]
+      },
+      "links": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/links.png"
+          }
+        ]
+      },
+      "all-types-of-files": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/all-types-of-files.png"
+          }
+        ]
+      },
+      "canva-files": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/canva-files.png"
+          }
+        ]
+      },
+      "list-files": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/list-files.png"
+          }
+        ]
+      },
+      "files-posted-from-drive-sharepoint": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/files-posted-from-drive-sharepoint.png"
+          }
+        ]
+      },
+      "gifs": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/gifs.png"
+          }
+        ]
+      },
+      "stickers": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/stickers.png"
+          }
+        ]
+      },
+      "members-posted-username-active-user-not-mapped": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/members-posted-username-active-user-not-mapped.png"
+          }
+        ]
+      },
+      "members-posted-username-inactive-user-not-mapped": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/members-posted-username-inactive-user-not-mapped.png"
+          }
+        ]
+      },
+      "members-posted-username-external-user-not-mapped": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/members-posted-username-external-user-not-mapped.png"
+          }
+        ]
+      },
+      "members-posted-username-deactivated-user": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/members-posted-username-deactivated-user.png"
+          }
+        ]
+      },
+      "one-time-migration": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/one-time-migration.png"
+          }
+        ]
+      },
+      "delta-migration": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/delta-migration.png"
+          }
+        ]
+      }
+    },
+    "limitations": {}
+  },
+  "slack-to-slack": {
+    "features": {},
+    "limitations": {}
+  },
+  "slack-to-teams": {
+    "features": {},
+    "limitations": {}
+  },
+  "teams-to-teams": {
+    "features": {},
+    "limitations": {}
+  },
+  "teams-to-chat": {
+    "features": {},
+    "limitations": {}
+  },
+  "chat-to-chat": {
+    "features": {},
+    "limitations": {}
+  },
+  "chat-to-teams": {
+    "features": {},
+    "limitations": {}
+  }
+}

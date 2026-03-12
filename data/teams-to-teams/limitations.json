@@ -1,0 +1,14 @@
+[
+  {"name": "Reactions not migrated", "description": "Message reactions are not migrated in Teams to Teams migration.", "family": "Reactions", "screenshot": ""},
+  {"name": "Some stickers as links", "description": "Some stickers may be migrated as links rather than native stickers.", "family": "Files", "screenshot": ""},
+  {"name": "Forwarded messages not migrated", "description": "Forwarded messages are not migrated.", "family": "Message State", "screenshot": ""},
+  {"name": "Translated messages as original", "description": "Translated messages appear in original language after migration.", "family": "Message State", "screenshot": ""},
+  {"name": "Messages posted to multiple channels as normal", "description": "Messages posted to multiple channels are migrated as normal single-channel posts.", "family": "Channels", "screenshot": ""},
+  {"name": "Edited label not migrated", "description": "The edited message label/indicator is not migrated.", "family": "Message State", "screenshot": ""},
+  {"name": "Channel message not migrating when posted from thread", "description": "Channel messages posted from a thread may not migrate correctly.", "family": "Channels", "screenshot": ""},
+  {"name": "Unmapped user mentions with admin name", "description": "Unmapped user mentions may display with admin name.", "family": "Channels", "screenshot": ""},
+  {"name": "Replies in DMs as separate messages", "description": "Replies in DMs may appear as separate messages rather than threaded.", "family": "Direct Messages", "screenshot": ""},
+  {"name": "Team and channel mentions as normal text", "description": "Team and channel mentions may appear as normal text after migration.", "family": "Channels", "screenshot": ""},
+  {"name": "Archived channels as standard", "description": "Archived channels may be migrated as standard (non-archived) channels.", "family": "Channels", "screenshot": ""},
+  {"name": "Reaction emojis as standard Unicode", "description": "Reaction emojis may appear as standard Unicode rather than native reactions.", "family": "Reactions", "screenshot": ""}
+]

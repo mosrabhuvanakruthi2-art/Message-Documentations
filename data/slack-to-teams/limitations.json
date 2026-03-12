@@ -1,0 +1,22 @@
+[
+  {"name": "Custom Emojis", "description": "Custom emojis have limitations in Slack to Teams migration.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "Stickers", "description": "Stickers have limitations in migration.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "GIFs", "description": "GIFs have limitations in migration.", "family": "Emojis & Media", "screenshot": ""},
+  {"name": "Canva Files", "description": "Canva files have limitations in migration.", "family": "Files", "screenshot": ""},
+  {"name": "List Files", "description": "List files have limitations in migration.", "family": "Files", "screenshot": ""},
+  {"name": "Video Transcriptions", "description": "Video transcriptions are not migrated or have limitations.", "family": "Transcriptions", "screenshot": ""},
+  {"name": "Audio Transcriptions", "description": "Audio transcriptions are not migrated or have limitations.", "family": "Transcriptions", "screenshot": ""},
+  {"name": "Underlined Text", "description": "Underlined text is not preserved in migration.", "family": "Formatting", "screenshot": ""},
+  {"name": "Block Code Messages", "description": "Block code messages have limitations in migration.", "family": "Formatting", "screenshot": ""},
+  {"name": "Reactions", "description": "Reactions are not migrated.", "family": "Reactions", "screenshot": ""},
+  {"name": "Saved Messages", "description": "Saved messages have limitations in migration.", "family": "Message State", "screenshot": ""},
+  {"name": "Pinned Messages", "description": "Pinned messages have limitations in migration.", "family": "Message State", "screenshot": ""},
+  {"name": "User Groups", "description": "User groups are not migrated or have limitations.", "family": "User Groups", "screenshot": ""},
+  {"name": "Tagged Channel", "description": "Tagged channel mentions have limitations in migration.", "family": "Channels", "screenshot": ""},
+  {"name": "Polly", "description": "Polly integration or polls have limitations in migration.", "family": "Integrations", "screenshot": ""},
+  {"name": "Workflows", "description": "Workflow automation has limitations in migration.", "family": "Integrations", "screenshot": ""},
+  {"name": "Edited message Tag", "description": "Edited message indicator/tag has limitations in migration.", "family": "Message State", "screenshot": ""},
+  {"name": "Forwarded message", "description": "Forwarded messages are not migrated.", "family": "Message State", "screenshot": ""},
+  {"name": "Files from G-drive", "description": "Files from Google Drive have limitations in migration.", "family": "Files", "screenshot": ""},
+  {"name": "Private Channels converted to Standard", "description": "Private channels may be converted to standard channels during migration.", "family": "Channels", "screenshot": ""}
+]
