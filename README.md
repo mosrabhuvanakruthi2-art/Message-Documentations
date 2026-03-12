@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Migration Docs
 
 Slack API docs–style viewer for **Supported Features** and **Limitations** across all migration combinations: Slack to Slack, Slack to Chat, Slack to Teams, Teams to Teams, Teams to Chat, Chat to Chat, Chat to Teams.
@@ -28,3 +29,6 @@ Then open http://localhost:8080.
 - **Search**: type in the search box or press **Ctrl+K** to focus it. Filters the current list by name and description.
 - **Filter by family**: click a tag (e.g. Channels, Files) to show only that category; click **All** or **Clear filters** to reset.
 - **Screenshots**: the table has a Screenshots column. To show an image, set the `screenshot` field in the JSON to a path (e.g. `assets/screenshots/slack-to-chat/public-channels.png`) or a URL. Leave empty for "—".
+=======
+# Message-Documentations
+>>>>>>> e34d448ad1d7999db18c69fd4cea88d81da97e43
