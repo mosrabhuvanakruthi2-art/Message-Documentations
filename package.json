@@ -5,6 +5,7 @@
     "node": ">=18"
   },
   "scripts": {
+    "build": "node -e \"process.exit(0)\"",
     "extract-pdf-screenshots": "node scripts/extract-pdf-screenshots.js",
     "start": "node scripts/server.js",
     "serve": "node scripts/serve.js"
