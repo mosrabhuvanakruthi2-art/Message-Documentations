@@ -203,6 +203,11 @@ function handleOpenScreenshotFolder(req, res) {
     res.end(JSON.stringify({ error: 'Invalid combo' }));
     return;
   }
+  if (process.env.RENDER === 'true') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Opening folder is not available when deployed. Add images using the upload form above.' }));
+    return;
+  }
   openScreenshotFolder(combo)
     .then((absolutePath) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });

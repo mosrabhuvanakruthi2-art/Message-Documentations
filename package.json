@@ -1,6 +1,9 @@
 {
   "name": "migration-docs",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "extract-pdf-screenshots": "node scripts/extract-pdf-screenshots.js",
     "start": "node scripts/server.js",
