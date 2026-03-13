@@ -38,14 +38,18 @@
 <body>
   <header class="header">
     <div class="header-left">
-      <a href="index.html" class="logo" style="text-decoration:none;color:inherit;font-size:1.25rem;font-weight:600;">Migration Docs</a>
+      <a href="index.html" class="header-logo-link" aria-label="Migration Docs home">
+        <img src="assets/CloudFuze-logo.svg" alt="CloudFuze" class="header-logo">
+      </a>
     </div>
     <div class="header-right">
-      <a href="index.html" class="search-trigger" style="text-decoration:none;color:inherit;">← Back to docs</a>
+      <a href="index.html" id="header-back-link" style="text-decoration:none;color:inherit;margin-right:12px;">← Back to docs</a>
+      <span class="header-title">Migration Docs</span>
     </div>
   </header>
 
   <main class="upload-img-page" style="margin-top: 56px;">
+    <div id="upload-img-content">
     <a href="index.html" class="back-link">← Back to Supported Features & Limitations</a>
     <h1>Upload screenshot for a feature</h1>
     <p class="intro">Choose the combination, document type (Supported features or Limitations), then the specific feature or limitation. Upload one image with the button, or open the project screenshot folder and add/replace images there (use the filename shown).</p>
@@ -93,13 +97,17 @@
     </div>
 
     <p class="nav-links">
-      <a href="upload.html">Upload PDF (bulk)</a>
+      <a href="upload.html?edit=1">Upload PDF (bulk)</a>
     </p>
+    </div>
   </main>
 
   <script>
 (function () {
   'use strict';
+
+  var headerBack = document.getElementById('header-back-link');
+  if (headerBack) headerBack.href = 'index.html';
 
   var comboSelect = document.getElementById('combo-select');
   var sectionSelect = document.getElementById('section-select');

@@ -9,33 +9,30 @@
 <body>
   <header class="header">
     <div class="header-left">
-      <h1 class="logo">Migration Docs</h1>
+      <a href="index.html" class="header-logo-link" aria-label="Migration Docs home">
+        <img src="assets/CloudFuze-logo.svg" alt="CloudFuze" class="header-logo">
+      </a>
+      <button type="button" class="sidebar-menu-btn" id="sidebarMenuBtn" aria-label="Open message combinations" title="Message combinations">☰</button>
     </div>
     <nav class="header-nav">
       <a href="#" class="nav-link active" data-section="features">Supported Features</a>
       <a href="#" class="nav-link" data-section="limitations">Limitations</a>
     </nav>
     <div class="header-right">
-      <a href="upload.html" class="nav-link" style="margin-right:8px;">Upload PDF</a>
-      <a href="upload-image.html" class="nav-link" style="margin-right:8px;">Upload screenshot</a>
-      <button type="button" class="search-trigger" aria-label="Search the docs (Ctrl+K)">
-        <span class="search-placeholder">Search the docs!</span>
-        <kbd>Ctrl+K</kbd>
-      </button>
+      <span class="header-title">Migration Docs</span>
     </div>
   </header>
 
   <div class="layout">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <h2 class="sidebar-title">Reference</h2>
         <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Collapse sidebar">
-          <span class="chevron"></span>
+          <span class="sidebar-arrow" id="sidebarArrow">←</span>
         </button>
       </div>
-      <nav class="sidebar-nav" id="sidebarCombos" aria-label="Migration combinations">
+      <nav class="sidebar-nav" id="sidebarCombos" aria-label="Message combinations">
         <div class="sidebar-section combos-section">
-          <h3 class="sidebar-combos-title">Migration path</h3>
+          <h3 class="sidebar-combos-title">Message combinations</h3>
           <ul class="sidebar-combos-list" id="sidebarCombosList">
             <li><a href="#" class="sidebar-link combo-link active" data-combo="slack-to-chat">Slack to Chat</a></li>
             <li><a href="#" class="sidebar-link combo-link" data-combo="slack-to-slack">Slack to Slack</a></li>

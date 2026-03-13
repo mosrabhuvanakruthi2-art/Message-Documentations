@@ -304,22 +304,79 @@
           }
         ]
       },
-      "one-time-migration": {
-        "images": [
-          {
-            "path": "assets/screenshots/slack-to-chat/one-time-migration.png"
-          }
-        ]
-      },
       "delta-migration": {
         "images": [
           {
             "path": "assets/screenshots/slack-to-chat/delta-migration.png"
           }
         ]
+      },
+      "one-time-migration": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/one-time-migration.png"
+          }
+        ]
       }
     },
-    "limitations": {}
+    "limitations": {
+      "1": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/limit_1.png"
+          }
+        ]
+      },
+      "slack-to-chat-migration-current-limitations-behavior": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/limit_2.png"
+          }
+        ]
+      },
+      "1-emojis-stickers-and-gifs": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/limit_3.png"
+          }
+        ]
+      },
+      "screenshot": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/limit_4.png"
+          }
+        ]
+      },
+      "custom-emojis": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/custom-emojis.png"
+          }
+        ]
+      },
+      "saved-messages": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/saved-messages.png"
+          }
+        ]
+      },
+      "tagged-channels": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/tagged-channels.png"
+          }
+        ]
+      },
+      "user-groups": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-chat/user-groups.png"
+          }
+        ]
+      }
+    }
   },
   "slack-to-slack": {
     "features": {},
@@ -327,7 +384,36 @@
   },
   "slack-to-teams": {
     "features": {},
-    "limitations": {}
+    "limitations": {
+      "custom-emojis": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-teams/custom-emojis.png"
+          }
+        ]
+      },
+      "saved-messages": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-teams/saved-messages.png"
+          }
+        ]
+      },
+      "tagged-channel": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-teams/tagged-channel.png"
+          }
+        ]
+      },
+      "user-groups": {
+        "images": [
+          {
+            "path": "assets/screenshots/slack-to-teams/user-groups.png"
+          }
+        ]
+      }
+    }
   },
   "teams-to-teams": {
     "features": {},

@@ -150,6 +150,7 @@
       var hasChildren = Array.isArray(item.children) && item.children.length > 0;
       if (!hasChildren) {
         const tr = document.createElement('tr');
+        tr.setAttribute('data-feature-slug', toSlug(item.name));
         var screenshotCell = renderScreenshotCell(item.screenshot, currentCombo, item.name, section);
         tr.innerHTML =
           '<td class="col-name">' + escapeHtml(item.name) + '</td>' +
@@ -161,6 +162,7 @@
       }
       var parentTr = document.createElement('tr');
       parentTr.className = 'parent-row';
+      parentTr.setAttribute('data-feature-slug', toSlug(item.name));
       var parentScreenshotCell = renderScreenshotCell(item.screenshot, currentCombo, item.name, section);
       parentTr.innerHTML =
         '<td class="col-name">' + escapeHtml(item.name) + '</td>' +
@@ -171,6 +173,7 @@
       item.children.forEach(function (child) {
         const childTr = document.createElement('tr');
         childTr.className = 'child-row';
+        childTr.setAttribute('data-feature-slug', toSlug(child.name));
         var childScreenshotCell = renderScreenshotCell(child.screenshot, currentCombo, child.name, section);
         childTr.innerHTML =
           '<td class="col-name col-name-child">' + escapeHtml(child.name) + '</td>' +
@@ -230,6 +233,7 @@
     }
 
     renderTable(section);
+    updateBrowserUrl();
   }
 
   function onSearchInput(section, value) {
@@ -240,10 +244,29 @@
   function initSidebar() {
     var sidebar = document.getElementById('sidebar');
     var toggle = document.getElementById('sidebarToggle');
+    var arrowEl = document.getElementById('sidebarArrow');
+    var menuBtn = document.getElementById('sidebarMenuBtn');
+    function updateArrow() {
+      if (arrowEl) arrowEl.textContent = sidebar.classList.contains('collapsed') ? '→' : '←';
+    }
+    function updateMenuBtn() {
+      if (!menuBtn) return;
+      var isCollapsed = sidebar.classList.contains('collapsed');
+      menuBtn.textContent = isCollapsed ? '☰' : '←';
+      menuBtn.setAttribute('aria-label', isCollapsed ? 'Open message combinations' : 'Close message combinations');
+    }
+    function toggleSidebar() {
+      sidebar.classList.toggle('collapsed');
+      updateArrow();
+      updateMenuBtn();
+    }
     if (toggle && sidebar) {
-      toggle.addEventListener('click', function () {
-        sidebar.classList.toggle('collapsed');
-      });
+      toggle.addEventListener('click', toggleSidebar);
+      updateArrow();
+    }
+    if (menuBtn && sidebar) {
+      menuBtn.addEventListener('click', toggleSidebar);
+      updateMenuBtn();
     }
 
     document.querySelectorAll('.combo-link').forEach(function (a) {
@@ -271,16 +294,19 @@
       onSearchInput('limitations', this.value);
     });
 
-    document.querySelector('.search-trigger').addEventListener('click', function () {
-      var input = currentSection === 'features' ? searchInputs.features : searchInputs.limitations;
-      input.focus();
-    });
+    var searchTrigger = document.querySelector('.search-trigger');
+    if (searchTrigger) {
+      searchTrigger.addEventListener('click', function () {
+        var input = currentSection === 'features' ? searchInputs.features : searchInputs.limitations;
+        input.focus();
+      });
+    }
 
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         var input = currentSection === 'features' ? searchInputs.features : searchInputs.limitations;
-        input.focus();
+        if (input) input.focus();
       }
     });
   }
@@ -323,6 +349,7 @@
         if (allLimitations) allLimitations.classList.add('active');
         if (clearButtons.features) clearButtons.features.classList.add('hidden');
         if (clearButtons.limitations) clearButtons.limitations.classList.add('hidden');
+        updateBrowserUrl();
       })
       .catch(function (err) {
         console.error(err);
@@ -335,17 +362,60 @@
       });
   }
 
+  function getQueryParams() {
+    var params = {};
+    var q = (window.location.search || '').slice(1).split('&');
+    for (var i = 0; i < q.length; i++) {
+      var parts = q[i].split('=');
+      if (parts.length >= 2) params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1].replace(/\+/g, ' '));
+    }
+    return params;
+  }
+
+  function buildDocsUrl(combo, section, opts) {
+    var params = [];
+    if (combo) params.push('combo=' + encodeURIComponent(combo));
+    if (section) params.push('section=' + encodeURIComponent(section));
+    if (opts && opts.edit) params.push('edit=1');
+    return 'index.html' + (params.length ? '?' + params.join('&') : '');
+  }
+
+  function updateBrowserUrl() {
+    var params = getQueryParams();
+    var url = buildDocsUrl(currentCombo, currentSection, params.edit === '1' ? { edit: 1 } : null);
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', url);
+    }
+  }
+
   function init() {
+    var params = getQueryParams();
+    if (params.combo && COMBO_IDS.indexOf(params.combo) !== -1) currentCombo = params.combo;
+    if (params.section === 'features' || params.section === 'limitations') currentSection = params.section;
+    var scrollToFeature = (params.feature || '').trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
     loadData(currentCombo)
       .then(function () {
         renderFilterTags('features');
         renderFilterTags('limitations');
         renderTable('features');
         renderTable('limitations');
+        document.querySelectorAll('.combo-link').forEach(function (a) {
+          a.classList.toggle('active', a.dataset.combo === currentCombo);
+        });
         initSidebar();
         initSearch();
         initClearFilters();
-        switchSection('features');
+        switchSection(currentSection);
+        if (scrollToFeature) {
+          setTimeout(function () {
+            var row = document.querySelector('tr[data-feature-slug="' + scrollToFeature + '"]');
+            if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateBrowserUrl();
+          }, 150);
+        } else {
+          updateBrowserUrl();
+        }
       })
       .catch(function (err) {
         console.error(err);

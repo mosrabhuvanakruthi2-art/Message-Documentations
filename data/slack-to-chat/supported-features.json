@@ -25,7 +25,7 @@
   {"name": "Members Posted Username (DMs)", "description": "Preserves original sender information for each DM.", "family": "Direct Messages", "screenshot": ""},
   {"name": "DM Members", "description": "All DM participants are correctly mapped and added.", "family": "Direct Messages", "screenshot": ""},
   {"name": "User Mentions in DMs", "description": "User mentions inside DMs are retained where mapping exists.", "family": "Direct Messages", "screenshot": ""},
-  {"name": "Replies in Direct Messages", "description": "Replies in DMs are migrated as individual messages due to platform constraints.", "family": "Direct Messages", "screenshot": ""},
+  {"name": "Replies in Direct Messages", "description": "Replies in DMs are migrated as threaded messages.", "family": "Direct Messages", "screenshot": ""},
   {"name": "Ordered List", "description": "List formatting is maintained during migration.", "family": "Text Formatting", "screenshot": ""},
   {"name": "Bullet List", "description": "Bullet list formatting is maintained during migration.", "family": "Text Formatting", "screenshot": ""},
   {"name": "Bold", "description": "Bold text formatting is maintained.", "family": "Text Formatting", "screenshot": ""},

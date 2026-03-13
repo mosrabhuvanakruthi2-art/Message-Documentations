@@ -1,12 +1,14 @@
 /**
- * Serves the docs and provides POST /api/upload-pdf to upload a PDF per combo,
- * extract pages as images, and update screenshot-metadata.json.
+ * Serves the docs and provides POST /api/upload-pdf to upload a Limitations or
+ * Supported Features PDF per combo and update section content (descriptions) only.
+ * No screenshot extraction; screenshots are added via upload-image.html.
  * Run: node scripts/server.js
  */
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { IncomingForm } = require('formidable');
+const pdfParse = require('pdf-parse');
 
 const ROOT = path.join(__dirname, '..');
 const PORT = process.env.PORT || 3000;
@@ -35,18 +37,6 @@ function parseMultipart(req) {
   });
 }
 
-async function extractPdfToDir(pdfPath, outDir, filePrefix = 'page') {
-  const { pdf } = await import('pdf-to-img');
-  const document = await pdf(pdfPath, { scale: 2 });
-  let counter = 1;
-  for await (const image of document) {
-    const outPath = path.join(outDir, `${filePrefix}_${counter}.png`);
-    fs.writeFileSync(outPath, image);
-    counter++;
-  }
-  return counter - 1;
-}
-
 function loadJson(filePath) {
   try {
     const raw = fs.readFileSync(filePath, 'utf8');
@@ -69,19 +59,95 @@ function saveMeta(meta) {
   fs.writeFileSync(META_PATH, JSON.stringify(meta, null, 2), 'utf8');
 }
 
-function buildSectionMeta(combo, numPages, section, filePrefix) {
-  const fileName = section === 'features' ? 'supported-features.json' : 'limitations.json';
+/** Extract text from PDF; returns { text, numpages }. */
+async function extractPdfText(pdfPath) {
+  const dataBuffer = fs.readFileSync(pdfPath);
+  const data = await pdfParse(dataBuffer);
+  return { text: data.text || '', numpages: data.numpages || 1 };
+}
+
+/** Escape special regex chars in a string for use in RegExp. */
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Extract one block of text per item: from each item's heading to the start of the next.
+ * Uses JSON item order; for each item we take text from its first occurrence to the next item's occurrence.
+ */
+function extractSectionsByItemNames(fullText, itemNames) {
+  const text = (fullText || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const sections = [];
+  const positions = []; // index in text where each item name first appears (in item order)
+  for (const name of itemNames) {
+    if (!name || typeof name !== 'string') {
+      positions.push(-1);
+      continue;
+    }
+    const re = new RegExp(escapeRegex(name), 'i');
+    const m = text.match(re);
+    positions.push(m ? m.index : -1);
+  }
+  for (let i = 0; i < itemNames.length; i++) {
+    const start = positions[i];
+    if (start < 0) {
+      sections.push('');
+      continue;
+    }
+    let end = text.length;
+    for (let j = 0; j < positions.length; j++) {
+      if (j !== i && positions[j] > start && positions[j] < end) end = positions[j];
+    }
+    sections.push(text.slice(start, end));
+  }
+  return sections;
+}
+
+/**
+ * Clean extracted section into a single description: remove the heading line,
+ * "Screenshot:" lines, leading numbers, and normalize whitespace.
+ */
+function cleanSectionDescription(raw, itemName) {
+  let t = (raw || '').trim();
+  if (!t) return undefined;
+  const nameRe = new RegExp('^' + escapeRegex(itemName) + '[\\s.•:]*', 'i');
+  t = t.replace(nameRe, '').trim();
+  t = t.replace(/\nScreenshot\s*:.*$/gim, '');
+  t = t.replace(/Screenshot\s*:.*/gim, '');
+  t = t.replace(/^\s*\d+\s+\d+\.\s*/gm, '');
+  t = t.replace(/^\s*\d+\.\s*/gm, '');
+  // Remove lines that are only a page number (standalone digit)
+  t = t.replace(/^\s*\d+\s*$/gm, '');
+  // Remove bullet points (•) from PDF content
+  t = t.replace(/•/g, ' ');
+  t = t.replace(/\s+/g, ' ').trim();
+  // Remove leading "number. " or "number • " at start (section/page number from PDF)
+  t = t.replace(/^\s*\d+\s*[.•]\s*/, '').trim();
+  if (t.length < 10) return undefined;
+  return t;
+}
+
+/**
+ * Update section JSON from PDF text by matching document sections to item names.
+ * Each item's description is set from the PDF section that starts with that item's name.
+ */
+function updateSectionContentFromPdf(combo, sectionType, fullText) {
+  const fileName = sectionType === 'features' ? 'supported-features.json' : 'limitations.json';
   const jsonPath = path.join(DATA_DIR, combo, fileName);
   const items = loadJson(jsonPath);
-  const basePath = 'assets/screenshots/' + combo;
-  const result = {};
+  if (!Array.isArray(items) || items.length === 0) return 0;
+  const names = items.map((it) => it.name);
+  const sectionTexts = extractSectionsByItemNames(fullText, names);
+  let updated = 0;
   for (let i = 0; i < items.length; i++) {
-    const slug = toSlug(items[i].name);
-    if (!slug) continue;
-    const pageNum = (i % (numPages || 1)) + 1;
-    result[slug] = { images: [{ path: basePath + '/' + filePrefix + '_' + pageNum + '.png' }] };
+    const desc = cleanSectionDescription(sectionTexts[i], names[i]);
+    if (desc !== undefined) {
+      items[i] = { ...items[i], description: desc };
+      updated++;
+    }
   }
-  return result;
+  fs.writeFileSync(jsonPath, JSON.stringify(items, null, 2), 'utf8');
+  return updated;
 }
 
 async function handleUploadPdf(req, res) {
@@ -103,21 +169,13 @@ async function handleUploadPdf(req, res) {
       return;
     }
     const sectionType = section === 'limitations' ? 'limitations' : 'features';
-    const filePrefix = sectionType === 'features' ? 'page' : 'limit';
 
     tmpPath = file.filepath;
-    const outDir = path.join(SCREENSHOTS_BASE, combo);
-    if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-
-    const numPages = await extractPdfToDir(tmpPath, outDir, filePrefix);
-
-    const meta = loadMeta();
-    if (!meta[combo]) meta[combo] = { features: {}, limitations: {} };
-    meta[combo][sectionType] = buildSectionMeta(combo, numPages, sectionType, filePrefix);
-    saveMeta(meta);
+    const { text, numpages } = await extractPdfText(tmpPath);
+    const updated = updateSectionContentFromPdf(combo, sectionType, text);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ success: true, pages: numPages, combo, section: sectionType }));
+    res.end(JSON.stringify({ success: true, pages: numpages, combo, section: sectionType, updated }));
   } catch (err) {
     console.error(err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -221,27 +279,42 @@ function handleOpenScreenshotFolder(req, res) {
 }
 
 function serveStatic(req, res) {
-  let filePath = path.join(ROOT, req.url === '/' ? 'index.html' : req.url.replace(/\?.*$/, ''));
+  let urlPath = req.url.replace(/\?.*$/, '');
+  let filePath = path.join(ROOT, urlPath === '/' ? 'index.html' : urlPath);
   if (path.relative(ROOT, filePath).startsWith('..')) {
     res.writeHead(403);
     res.end('Forbidden');
     return;
   }
   fs.readFile(filePath, (err, data) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        res.writeHead(404);
-        res.end('Not found');
-        return;
+    if (!err && data) {
+      const ext = path.extname(filePath);
+      const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.svg': 'image/svg+xml' };
+      res.setHeader('Content-Type', mime[ext] || 'application/octet-stream');
+      if (req.url.split('?')[0].endsWith('screenshot-metadata.json')) {
+        res.setHeader('Cache-Control', 'no-store');
       }
-      res.writeHead(500);
-      res.end('Server error');
+      res.end(data);
       return;
     }
-    const ext = path.extname(filePath);
-    const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.svg': 'image/svg+xml' };
-    res.setHeader('Content-Type', mime[ext] || 'application/octet-stream');
-    res.end(data);
+    if (err && err.code === 'ENOENT' && !path.extname(filePath)) {
+      return fs.readFile(filePath + '.html', (err2, data2) => {
+        if (!err2 && data2) {
+          res.setHeader('Content-Type', 'text/html');
+          res.end(data2);
+          return;
+        }
+        res.writeHead(404);
+        res.end('Not found');
+      });
+    }
+    if (err && err.code === 'ENOENT') {
+      res.writeHead(404);
+      res.end('Not found');
+      return;
+    }
+    res.writeHead(500);
+    res.end('Server error');
   });
 }
 

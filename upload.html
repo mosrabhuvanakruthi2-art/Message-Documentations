@@ -30,17 +30,21 @@
 <body>
   <header class="header">
     <div class="header-left">
-      <a href="index.html" class="logo" style="text-decoration:none;color:inherit;font-size:1.25rem;font-weight:600;">Migration Docs</a>
+      <a href="index.html" class="header-logo-link" aria-label="Migration Docs home">
+        <img src="assets/CloudFuze-logo.svg" alt="CloudFuze" class="header-logo">
+      </a>
     </div>
     <div class="header-right">
-      <a href="index.html" class="search-trigger" style="text-decoration:none;color:inherit;">← Back to docs</a>
+      <a href="index.html" id="header-back-link" style="text-decoration:none;color:inherit;margin-right:12px;">← Back to docs</a>
+      <span class="header-title">Migration Docs</span>
     </div>
   </header>
 
   <main class="upload-page" style="margin-top: 56px;">
-    <a href="index.html" class="back-link">← Back to Supported Features & Limitations</a>
+    <div id="upload-content">
+    <a href="index.html" class="back-link" id="upload-back-link">← Back to Supported Features & Limitations</a>
     <h1>Upload PDF by migration path</h1>
-    <p class="intro">Choose the combination and document type, then upload a PDF. To upload a single screenshot for one feature, use <a href="upload-image.html" style="color: var(--name-link);">Upload screenshot</a>. Pages are extracted as images and mapped to the selected section in order. Use this when the document is updated with new features or changes.<br><strong>Run the server with upload support:</strong> <code>node scripts/server.js</code> (then open this page at localhost:3000/upload.html).</p>
+    <p class="intro">Choose the combination and document type, then upload a PDF. The PDF text is used to update the section content (item descriptions). Page numbers, leading section numbers (e.g. "2 •"), and bullet points (•) are stripped automatically. Screenshots are not extracted from the PDF—use <a href="upload-image.html" style="color: var(--name-link);">Upload screenshot</a> to add images. Use this when the document is updated with new features or changes.<br><strong>Run the server with upload support:</strong> <code>node scripts/server.js</code> (then open this page at localhost:3000/upload.html).</p>
 
     <div class="upload-form">
       <div class="upload-row">
@@ -71,11 +75,15 @@
       </div>
       <p class="upload-status" id="upload-status" aria-live="polite"></p>
     </div>
+    </div>
   </main>
 
   <script>
 (function () {
   'use strict';
+
+  var headerBack = document.getElementById('header-back-link');
+  if (headerBack) headerBack.href = 'index.html';
 
   var comboSelect = document.getElementById('combo-select');
   var sectionSelect = document.getElementById('section-select');
@@ -118,7 +126,11 @@
         return res.json();
       })
       .then(function (data) {
-        setStatus((data.pages ? data.pages + ' pages extracted' : 'Done'), 'success');
+        var sectionName = sectionSelect.value === 'limitations' ? 'Limitations' : 'Supported Features';
+        var msg = data.pages ? data.pages + ' pages processed. Content (descriptions) updated from PDF.' : 'Done.';
+        if (data.updated != null) msg += ' ' + data.updated + ' item(s) updated.';
+        msg += ' To add screenshots, use Upload screenshot.';
+        setStatus(msg, 'success');
         pdfInput.value = '';
       })
       .catch(function (err) {

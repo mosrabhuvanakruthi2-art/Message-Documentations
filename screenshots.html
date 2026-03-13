@@ -31,15 +31,18 @@
 <body>
   <header class="header">
     <div class="header-left">
-      <a href="index.html" class="logo" style="text-decoration:none;color:inherit;">Migration Docs</a>
+      <a href="index.html" class="header-logo-link" aria-label="Migration Docs home">
+        <img src="assets/CloudFuze-logo.svg" alt="CloudFuze" class="header-logo">
+      </a>
     </div>
     <div class="header-right">
-      <a href="index.html" class="search-trigger" style="text-decoration:none;color:inherit;">← Back to docs</a>
+      <a href="index.html" id="header-back-to-docs" style="text-decoration:none;color:inherit;margin-right:12px;">← Back to docs</a>
+      <span class="header-title">Migration Docs</span>
     </div>
   </header>
 
   <main class="screenshots-page">
-    <a href="index.html" class="back-link">← Back to Supported Features & Limitations</a>
+    <a href="index.html" class="back-link" id="back-to-docs-link">← Back to Supported Features & Limitations</a>
     <h1 id="screenshots-title">Screenshots</h1>
     <p id="screenshots-subtitle" style="color: var(--text-secondary); margin: 0 0 24px; font-size: 0.9rem;"></p>
     <div id="screenshots-content"></div>
@@ -79,8 +82,9 @@
     return base + '/' + combo + '/' + slug + '.' + (ext || 'png');
   }
 
-  function loadJSON(path) {
-    return fetch(path).then(function (res) { return res.ok ? res.json() : []; });
+  function loadJSON(path, noCache) {
+    var opts = noCache ? { cache: 'no-store' } : {};
+    return fetch(path, opts).then(function (res) { return res.ok ? res.json() : []; });
   }
 
   function getScreenshotMeta(metadata, combo, section, slug) {
@@ -112,7 +116,7 @@
       }
       html += '</div>';
     } else {
-      html += '<p class="no-image">No screenshot added yet. Add an entry for this heading in <code>data/screenshot-metadata.json</code> with the correct image path (only matched screenshots are shown).</p>';
+      html += '<p class="no-image">No screenshot added yet</p>';
     }
     html += '</div></div>';
     return html;
@@ -178,11 +182,19 @@
     var sectionFilter = params.section || '';
     var normalizedSlug = featureSlug ? String(featureSlug).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '') : '';
 
+    var backHref = 'index.html?combo=' + encodeURIComponent(combo);
+    if (sectionFilter) backHref += '&section=' + encodeURIComponent(sectionFilter);
+    if (normalizedSlug) backHref += '&feature=' + encodeURIComponent(normalizedSlug);
+    var backLink = document.getElementById('back-to-docs-link');
+    if (backLink) backLink.href = backHref;
+    var headerBackLink = document.getElementById('header-back-to-docs');
+    if (headerBackLink) headerBackLink.href = backHref;
+
     document.getElementById('screenshots-title').textContent = 'Screenshots – ' + (COMBO_LABELS[combo] || combo);
     document.getElementById('screenshots-subtitle').innerHTML = 'Only screenshots explicitly mapped to a heading in <code>data/screenshot-metadata.json</code> are shown. Add an entry (key = feature slug) only when the image matches that heading; otherwise the slot is left empty.';
 
     Promise.all([
-      loadJSON('data/screenshot-metadata.json').catch(function () { return {}; }),
+      loadJSON('data/screenshot-metadata.json', true).catch(function () { return {}; }),
       loadJSON('data/' + combo + '/supported-features.json'),
       loadJSON('data/' + combo + '/limitations.json')
     ]).then(function (results) {
