@@ -5,7 +5,8 @@
 
   const DATA = {
     features: [],
-    limitations: []
+    limitations: [],
+    screenshotMeta: {}
   };
 
   let currentCombo = 'slack-to-chat';
@@ -53,6 +54,11 @@
       }),
       loadJSON('data/' + c + '/limitations.json').then(function (arr) {
         DATA.limitations = Array.isArray(arr) ? arr : [];
+      }),
+      loadJSON('data/screenshot-metadata.json').then(function (obj) {
+        DATA.screenshotMeta = obj && typeof obj === 'object' ? obj : {};
+      }).catch(function () {
+        DATA.screenshotMeta = {};
       })
     ]);
   }
@@ -146,6 +152,16 @@
       return;
     }
 
+    function appendScreenshotDetailRow(tbody, slug, sec) {
+      var detailTr = document.createElement('tr');
+      detailTr.className = 'screenshot-detail-row hidden';
+      detailTr.setAttribute('data-feature-slug', slug);
+      detailTr.setAttribute('data-section', sec);
+      detailTr.setAttribute('aria-hidden', 'true');
+      detailTr.innerHTML = '<td colspan="4"><div class="screenshot-inline-content"></div></td>';
+      tbody.appendChild(detailTr);
+    }
+
     filtered.forEach(function (item) {
       var hasChildren = Array.isArray(item.children) && item.children.length > 0;
       if (!hasChildren) {
@@ -158,6 +174,7 @@
           '<td class="col-screenshot">' + screenshotCell + '</td>' +
           '<td class="col-family"><span class="family-badge">' + escapeHtml(item.family || '') + '</span></td>';
         tbody.appendChild(tr);
+        appendScreenshotDetailRow(tbody, toSlug(item.name), section);
         return;
       }
       var parentTr = document.createElement('tr');
@@ -170,6 +187,7 @@
         '<td class="col-screenshot">' + parentScreenshotCell + '</td>' +
         '<td class="col-family"><span class="family-badge">' + escapeHtml(item.family || '') + '</span></td>';
       tbody.appendChild(parentTr);
+      appendScreenshotDetailRow(tbody, toSlug(item.name), section);
       item.children.forEach(function (child) {
         const childTr = document.createElement('tr');
         childTr.className = 'child-row';
@@ -181,6 +199,7 @@
           '<td class="col-screenshot">' + childScreenshotCell + '</td>' +
           '<td class="col-family"><span class="family-badge">' + escapeHtml(child.family || item.family || '') + '</span></td>';
         tbody.appendChild(childTr);
+        appendScreenshotDetailRow(tbody, toSlug(child.name), section);
       });
     });
   }
@@ -197,16 +216,9 @@
 
   function renderScreenshotCell(screenshot, combo, featureName, section) {
     var slug = toSlug(featureName);
-    var screenshotsUrl = 'screenshots.html?combo=' + encodeURIComponent(combo || currentCombo) + '&feature=' + encodeURIComponent(slug);
-    if (section) screenshotsUrl += '&section=' + encodeURIComponent(section);
-    if (!screenshot || typeof screenshot !== 'string' || screenshot.trim() === '') {
-      return '<a href="' + escapeHtml(screenshotsUrl) + '" class="screenshot-link">Screenshots</a>';
-    }
-    var escaped = escapeHtml(screenshot);
-    if (/\.(jpg|jpeg|png|gif|webp|svg)(\?|$)/i.test(screenshot)) {
-      return '<a href="' + escaped + '" target="_blank" rel="noopener"><img src="' + escaped + '" alt="Screenshot" class="screenshot-thumb" loading="lazy"></a>';
-    }
-    return '<a href="' + escaped + '" target="_blank" rel="noopener" class="screenshot-link">View</a>';
+    var c = combo || currentCombo;
+    var sec = section || currentSection;
+    return '<button type="button" class="screenshot-link screenshot-toggle" data-feature-slug="' + escapeAttr(slug) + '" data-section="' + escapeAttr(sec) + '">Screenshots <span class="screenshot-arrow" aria-hidden="true">\u02C5</span></button>';
   }
 
   function escapeHtml(str) {
@@ -214,6 +226,47 @@
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  function escapeAttr(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function getScreenshotMeta(combo, section, slug) {
+    var meta = DATA.screenshotMeta;
+    if (!meta || !meta[combo] || !meta[combo][section]) return null;
+    var sec = meta[combo][section][slug];
+    return sec && Array.isArray(sec.images) && sec.images.length > 0 ? sec.images : null;
+  }
+
+  function renderScreenshotInline(combo, section, slug) {
+    var images = getScreenshotMeta(combo, section, slug);
+    var basePath = (DATA.screenshotMeta._basePath || 'assets/screenshots').replace(/\/$/, '');
+    var html = '<div class="screenshot-inline-block"><p class="screenshot-inline-label">Screenshot:</p><div class="screenshot-inline-imgs">';
+    if (images && images.length > 0) {
+      html += '<div class="screenshot-inline-row">';
+      for (var i = 0; i < images.length; i++) {
+        var img = images[i];
+        var path = (img.path || '').trim();
+        var label = (img.label || '').trim();
+        html += '<div class="screenshot-inline-item">';
+        html += '<img src="' + escapeAttr(path) + '" alt="' + escapeAttr(label || 'Screenshot ' + (i + 1)) + '" loading="lazy" onerror="this.style.display=\'none\'; if(this.nextElementSibling) this.nextElementSibling.style.display=\'block\';">';
+        html += '<span class="screenshot-inline-not-found" style="display:none;">Image not found: ' + escapeHtml(path) + '</span>';
+        if (label) html += '<p class="screenshot-inline-caption">' + escapeHtml(label) + '</p>';
+        html += '</div>';
+      }
+      html += '</div>';
+    } else {
+      html += '<p class="screenshot-inline-no-image">No screenshot added yet</p>';
+    }
+    html += '</div></div>';
+    return html;
   }
 
   function switchSection(section) {
@@ -241,18 +294,61 @@
     renderTable(section);
   }
 
+  function handleScreenshotToggle(btn) {
+    var slug = btn.getAttribute('data-feature-slug');
+    var section = btn.getAttribute('data-section');
+    if (!slug || !section) return;
+    var dataRow = btn.closest('tr');
+    var detailRow = dataRow && dataRow.nextElementSibling;
+    if (!detailRow || !detailRow.classList.contains('screenshot-detail-row')) return;
+
+    var isOpen = !detailRow.classList.contains('hidden');
+
+    function setArrow(b, down) {
+      var arrow = b && b.querySelector('.screenshot-arrow');
+      if (arrow) arrow.textContent = down ? '\u02C5' : '^';
+    }
+    function closeAllInSection(tbody) {
+      tbody.querySelectorAll('tr.screenshot-detail-row').forEach(function (row) {
+        if (row.classList.contains('hidden')) return;
+        row.classList.add('hidden');
+        row.setAttribute('aria-hidden', 'true');
+        var prev = row.previousElementSibling;
+        while (prev && prev.classList.contains('screenshot-detail-row')) prev = prev.previousElementSibling;
+        if (prev) {
+          var toggle = prev.querySelector('.screenshot-toggle');
+          if (toggle) setArrow(toggle, true);
+        }
+      });
+    }
+    tableBodies.features && closeAllInSection(tableBodies.features);
+    tableBodies.limitations && closeAllInSection(tableBodies.limitations);
+
+    if (isOpen) {
+      setArrow(btn, true);
+      return;
+    }
+    var content = detailRow.querySelector('.screenshot-inline-content');
+    if (content) {
+      content.innerHTML = renderScreenshotInline(currentCombo, section, slug);
+    }
+    detailRow.classList.remove('hidden');
+    detailRow.setAttribute('aria-hidden', 'false');
+    setArrow(btn, false);
+  }
+
   function initSidebar() {
     var sidebar = document.getElementById('sidebar');
     var toggle = document.getElementById('sidebarToggle');
     var arrowEl = document.getElementById('sidebarArrow');
     var menuBtn = document.getElementById('sidebarMenuBtn');
     function updateArrow() {
-      if (arrowEl) arrowEl.textContent = sidebar.classList.contains('collapsed') ? '→' : '←';
+      if (arrowEl) arrowEl.textContent = '☰';
     }
     function updateMenuBtn() {
       if (!menuBtn) return;
       var isCollapsed = sidebar.classList.contains('collapsed');
-      menuBtn.textContent = isCollapsed ? '☰' : '←';
+      menuBtn.textContent = '☰';
       menuBtn.setAttribute('aria-label', isCollapsed ? 'Open message combinations' : 'Close message combinations');
     }
     function toggleSidebar() {
@@ -388,11 +484,33 @@
     }
   }
 
+  function initTheme() {
+    var stored = typeof localStorage !== 'undefined' && localStorage.getItem('docs-theme');
+    var theme = stored === 'light' || stored === 'dark' ? stored : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = document.getElementById('themeToggle');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        if (typeof localStorage !== 'undefined') localStorage.setItem('docs-theme', next);
+      });
+    }
+  }
+
   function init() {
+    initTheme();
     var params = getQueryParams();
     if (params.combo && COMBO_IDS.indexOf(params.combo) !== -1) currentCombo = params.combo;
     if (params.section === 'features' || params.section === 'limitations') currentSection = params.section;
     var scrollToFeature = (params.feature || '').trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+    document.body.addEventListener('click', function (e) {
+      var btn = e.target.closest('.screenshot-toggle');
+      if (!btn) return;
+      e.preventDefault();
+      handleScreenshotToggle(btn);
+    });
 
     loadData(currentCombo)
       .then(function () {

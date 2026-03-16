@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Screenshots – Migration Docs</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script>
+    (function(){ var t = localStorage.getItem('docs-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light'); })();
+  </script>
   <style>
     .screenshots-page { padding: 24px 32px 48px; max-width: 1200px; margin: 0 auto; }
     .screenshots-page h1 { margin: 0 0 8px; font-size: 1.5rem; }
@@ -42,7 +45,7 @@
   </header>
 
   <main class="screenshots-page">
-    <a href="index.html" class="back-link" id="back-to-docs-link">← Back to Supported Features & Limitations</a>
+    <a href="index.html" class="back-link" id="back-to-docs-link">← Back to Inscope & Outscope</a>
     <h1 id="screenshots-title">Screenshots</h1>
     <p id="screenshots-subtitle" style="color: var(--text-secondary); margin: 0 0 24px; font-size: 0.9rem;"></p>
     <div id="screenshots-content"></div>
@@ -209,7 +212,7 @@
           var allUrl = 'screenshots.html?combo=' + encodeURIComponent(combo);
           if (sectionFilter) allUrl += '&section=' + encodeURIComponent(sectionFilter);
           html += '<div class="screenshots-section">';
-          html += '<h2>' + (found.section === 'features' ? 'Supported Features' : 'Limitations') + '</h2>';
+          html += '<h2>' + (found.section === 'features' ? 'Inscope' : 'Outscope') + '</h2>';
           html += '<p class="single-feature-back"><a href="' + escapeAttr(allUrl) + '">View all features and limitations</a></p>';
           html += renderBlock(combo, found.item, found.section, metadata);
           html += '</div>';
@@ -219,7 +222,7 @@
       }
 
       if (features.length && (!sectionFilter || sectionFilter === 'features')) {
-        html += '<div class="screenshots-section"><h2>Supported Features</h2>';
+        html += '<div class="screenshots-section"><h2>Inscope</h2>';
         features.forEach(function (item) {
           html += renderBlock(combo, item, 'features', metadata);
           if (Array.isArray(item.children) && item.children.length > 0) {
@@ -231,7 +234,7 @@
         html += '</div>';
       }
       if (limitations.length && (!sectionFilter || sectionFilter === 'limitations')) {
-        html += '<div class="screenshots-section"><h2>Limitations</h2>';
+        html += '<div class="screenshots-section"><h2>Outscope</h2>';
         limitations.forEach(function (item) {
           html += renderBlock(combo, item, 'limitations', metadata);
           if (Array.isArray(item.children) && item.children.length > 0) {

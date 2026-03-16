@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload PDF – Migration Docs</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script>
+    (function(){ var t = localStorage.getItem('docs-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light'); })();
+  </script>
   <style>
     .upload-page { padding: 24px 32px 48px; max-width: 720px; margin: 0 auto; }
     .upload-page h1 { margin: 0 0 8px; font-size: 1.5rem; }
@@ -42,7 +45,7 @@
 
   <main class="upload-page" style="margin-top: 56px;">
     <div id="upload-content">
-    <a href="index.html" class="back-link" id="upload-back-link">← Back to Supported Features & Limitations</a>
+    <a href="index.html" class="back-link" id="upload-back-link">← Back to Inscope & Outscope</a>
     <h1>Upload PDF by migration path</h1>
     <p class="intro">Choose the combination and document type, then upload a PDF. The PDF text is used to update the section content (item descriptions). Page numbers, leading section numbers (e.g. "2 •"), and bullet points (•) are stripped automatically. Screenshots are not extracted from the PDF—use <a href="upload-image.html" style="color: var(--name-link);">Upload screenshot</a> to add images. Use this when the document is updated with new features or changes.<br><strong>Run the server with upload support:</strong> <code>node scripts/server.js</code> (then open this page at localhost:3000/upload.html).</p>
 
@@ -61,9 +64,9 @@
       </div>
       <div class="upload-row">
         <label for="section-select">Document</label>
-        <select id="section-select" class="upload-dropdown" aria-label="Choose Supported features or Limitations">
-          <option value="features">Supported features</option>
-          <option value="limitations">Limitations</option>
+        <select id="section-select" class="upload-dropdown" aria-label="Choose Inscope or Outscope">
+          <option value="features">Inscope</option>
+          <option value="limitations">Outscope</option>
         </select>
       </div>
       <div class="upload-row">
@@ -126,7 +129,7 @@
         return res.json();
       })
       .then(function (data) {
-        var sectionName = sectionSelect.value === 'limitations' ? 'Limitations' : 'Supported Features';
+        var sectionName = sectionSelect.value === 'limitations' ? 'Outscope' : 'Inscope';
         var msg = data.pages ? data.pages + ' pages processed. Content (descriptions) updated from PDF.' : 'Done.';
         if (data.updated != null) msg += ' ' + data.updated + ' item(s) updated.';
         msg += ' To add screenshots, use Upload screenshot.';
